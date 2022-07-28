@@ -108,7 +108,11 @@ inline void *ReallocUnattributed( void *pMem, size_t nSize )
 // this magic only works under win32
 // under linux this malloc() overrides the libc malloc() and so we
 // end up in a recursion (as g_pMemAlloc->Alloc() calls malloc)
-#if _MSC_VER >= 1400
+#if _MSC_VER >= 1900 // intrinsic: add VS2015+ support
+#define SUPPRESS_INVALID_PARAMETER_NO_INFO
+#define ALLOC_CALL  __declspec(restrict)
+#define FREE_CALL 
+#elif _MSC_VER >= 1400
 #define ALLOC_CALL _CRTNOALIAS _CRTRESTRICT 
 #define FREE_CALL _CRTNOALIAS 
 #else
